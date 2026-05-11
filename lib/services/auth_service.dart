@@ -1,23 +1,80 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:async';
 
-/// Authentication service wrapping Firebase Auth operations.
+import '../models/auth_user.dart';
+
+/// Simple error thrown by [AuthService] for authentication failures.
+class AuthException implements Exception {
+  const AuthException(this.code, this.message);
+
+  final String code;
+  final String message;
+
+  @override
+  String toString() => 'AuthException($code): $message';
+}
+
+class _UserRecord {
+  _UserRecord({required this.userId, required this.password});
+  final String userId;
+  final String password;
+}
+
+/// Authentication service using in-memory storage.
+///
+/// Users registered in one session are available for the duration of that
+/// session. No data is persisted between app restarts.
 class AuthService {
-  AuthService({FirebaseAuth? auth}) : _auth = auth ?? FirebaseAuth.instance;
+  final Map<String, _UserRecord> _users = {};
+  final StreamController<AuthUser?> _controller =
+      StreamController<AuthUser?>.broadcast();
+  AuthUser? _currentUser;
 
-  final FirebaseAuth _auth;
-
-  Stream<User?> authStateChanges() => _auth.authStateChanges();
-
-  Future<UserCredential> signIn(String email, String password) {
-    return _auth.signInWithEmailAndPassword(email: email, password: password);
+  /// Stream that emits the current user on subscription and on every change.
+  Stream<AuthUser?> authStateChanges() async* {
+    yield _currentUser;
+    yield* _controller.stream;
   }
 
-  Future<UserCredential> signUp(String email, String password) {
-    return _auth.createUserWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
+  /// Signs in with [email] and [password].
+  ///
+  /// Throws [AuthException] if credentials are invalid.
+  Future<AuthUser> signIn(String email, String password) async {
+    final record = _users[email.toLowerCase()];
+    if (record == null || record.password != password) {
+      throw const AuthException(
+        'invalid-credential',
+        'Incorrect email or password.',
+      );
+    }
+    _currentUser = AuthUser(id: record.userId, email: email.toLowerCase());
+    _controller.add(_currentUser);
+    return _currentUser!;
   }
 
-  Future<void> signOut() => _auth.signOut();
+  /// Creates a new account with [email] and [password].
+  ///
+  /// Throws [AuthException] if the email is already registered.
+  Future<AuthUser> signUp(String email, String password) async {
+    final key = email.toLowerCase();
+    if (_users.containsKey(key)) {
+      throw const AuthException(
+        'email-already-in-use',
+        'An account already exists with this email.',
+      );
+    }
+    final userId = key.hashCode.abs().toRadixString(16);
+    _users[key] = _UserRecord(userId: userId, password: password);
+    _currentUser = AuthUser(id: userId, email: key);
+    _controller.add(_currentUser);
+    return _currentUser!;
+  }
+
+  /// Signs out the current user.
+  Future<void> signOut() async {
+    _currentUser = null;
+    _controller.add(null);
+  }
+
+  /// Releases resources held by this service.
+  void dispose() => _controller.close();
 }

@@ -1,9 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../config/routes.dart';
 import '../../providers/auth_provider.dart';
+import '../../services/auth_service.dart';
 import '../../theme/colors.dart';
 import '../../utils/validators.dart';
 
@@ -48,8 +48,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       Navigator.of(context).pushReplacementNamed(AppRoutes.profileSetup);
     } else {
       final error = ref.read(authNotifierProvider).error;
-      final message = error is FirebaseAuthException
-          ? Validators.firebaseAuthError(error.code)
+      final message = error is AuthException
+          ? Validators.authError(error.code)
           : 'An error occurred. Please try again.';
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

@@ -1,7 +1,7 @@
 /// Education level for profile branching fields.
 enum EducationLevel { highSchool, college }
 
-/// User profile stored in Firestore `users/{userId}`.
+/// User profile stored locally.
 class UserModel {
   const UserModel({
     required this.id,

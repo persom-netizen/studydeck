@@ -1,29 +1,25 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:async';
 
-import '../config/app_constants.dart';
 import '../models/source_model.dart';
 
-/// CRUD service for uploaded or linked sources.
+/// CRUD service for uploaded or linked sources (in-memory).
 class SourceService {
-  SourceService({FirebaseFirestore? firestore})
-    : _firestore = firestore ?? FirebaseFirestore.instance;
+  final Map<String, SourceModel> _store = {};
+  final StreamController<void> _controller =
+      StreamController<void>.broadcast();
 
-  final FirebaseFirestore _firestore;
-
-  CollectionReference<Map<String, dynamic>> get _sources =>
-      _firestore.collection(AppConstants.sourcesCollection);
-
-  Future<void> createSource(SourceModel source) =>
-      _sources.doc(source.id).set(source.toMap());
-
-  Stream<List<SourceModel>> watchSources(String courseId) {
-    return _sources
-        .where('courseId', isEqualTo: courseId)
-        .snapshots()
-        .map(
-          (snapshot) => snapshot.docs
-              .map((doc) => SourceModel.fromMap(doc.id, doc.data()))
-              .toList(),
-        );
+  Future<void> createSource(SourceModel source) async {
+    _store[source.id] = source;
+    _controller.add(null);
   }
+
+  Stream<List<SourceModel>> watchSources(String courseId) async* {
+    yield _store.values.where((s) => s.courseId == courseId).toList();
+    yield* _controller.stream.map(
+      (_) => _store.values.where((s) => s.courseId == courseId).toList(),
+    );
+  }
+
+  /// Releases resources held by this service.
+  void dispose() => _controller.close();
 }

@@ -1,29 +1,25 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:async';
 
-import '../config/app_constants.dart';
 import '../models/todo_model.dart';
 
-/// CRUD service for user to-do tasks.
+/// CRUD service for user to-do tasks (in-memory).
 class TodoService {
-  TodoService({FirebaseFirestore? firestore})
-    : _firestore = firestore ?? FirebaseFirestore.instance;
+  final Map<String, TodoModel> _store = {};
+  final StreamController<void> _controller =
+      StreamController<void>.broadcast();
 
-  final FirebaseFirestore _firestore;
-
-  CollectionReference<Map<String, dynamic>> get _todos =>
-      _firestore.collection(AppConstants.todosCollection);
-
-  Future<void> createTodo(TodoModel todo) =>
-      _todos.doc(todo.id).set(todo.toMap());
-
-  Stream<List<TodoModel>> watchTodos(String userId) {
-    return _todos
-        .where('userId', isEqualTo: userId)
-        .snapshots()
-        .map(
-          (snapshot) => snapshot.docs
-              .map((doc) => TodoModel.fromMap(doc.id, doc.data()))
-              .toList(),
-        );
+  Future<void> createTodo(TodoModel todo) async {
+    _store[todo.id] = todo;
+    _controller.add(null);
   }
+
+  Stream<List<TodoModel>> watchTodos(String userId) async* {
+    yield _store.values.where((t) => t.userId == userId).toList();
+    yield* _controller.stream.map(
+      (_) => _store.values.where((t) => t.userId == userId).toList(),
+    );
+  }
+
+  /// Releases resources held by this service.
+  void dispose() => _controller.close();
 }
