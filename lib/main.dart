@@ -27,6 +27,21 @@ class StudyDeckApp extends ConsumerWidget {
             home: Scaffold(body: Center(child: CircularProgressIndicator())),
           );
         }
+        if (snapshot.hasError) {
+          return const MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: const Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Text(
+                    'Firebase initialization failed. '
+                    'See docs/FIREBASE_SETUP.md for configuration steps.',
+                  ),
+                ),
+              ),
+            ),
+          );
+        }
 
         final authState = ref.watch(authStateProvider);
         return MaterialApp(
