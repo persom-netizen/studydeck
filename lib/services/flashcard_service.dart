@@ -1,29 +1,25 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:async';
 
-import '../config/app_constants.dart';
 import '../models/flashcard_model.dart';
 
-/// CRUD service for flashcards.
+/// CRUD service for flashcards (in-memory).
 class FlashcardService {
-  FlashcardService({FirebaseFirestore? firestore})
-    : _firestore = firestore ?? FirebaseFirestore.instance;
+  final Map<String, FlashcardModel> _store = {};
+  final StreamController<void> _controller =
+      StreamController<void>.broadcast();
 
-  final FirebaseFirestore _firestore;
-
-  CollectionReference<Map<String, dynamic>> get _flashcards =>
-      _firestore.collection(AppConstants.flashcardsCollection);
-
-  Future<void> createFlashcard(FlashcardModel flashcard) =>
-      _flashcards.doc(flashcard.id).set(flashcard.toMap());
-
-  Stream<List<FlashcardModel>> watchFlashcards(String courseId) {
-    return _flashcards
-        .where('courseId', isEqualTo: courseId)
-        .snapshots()
-        .map(
-          (snapshot) => snapshot.docs
-              .map((doc) => FlashcardModel.fromMap(doc.id, doc.data()))
-              .toList(),
-        );
+  Future<void> createFlashcard(FlashcardModel flashcard) async {
+    _store[flashcard.id] = flashcard;
+    _controller.add(null);
   }
+
+  Stream<List<FlashcardModel>> watchFlashcards(String courseId) async* {
+    yield _store.values.where((f) => f.courseId == courseId).toList();
+    yield* _controller.stream.map(
+      (_) => _store.values.where((f) => f.courseId == courseId).toList(),
+    );
+  }
+
+  /// Releases resources held by this service.
+  void dispose() => _controller.close();
 }

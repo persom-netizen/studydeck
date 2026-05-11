@@ -1,29 +1,25 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:async';
 
-import '../config/app_constants.dart';
 import '../models/study_deck_model.dart';
 
-/// CRUD service for study decks.
+/// CRUD service for study decks (in-memory).
 class StudyDeckService {
-  StudyDeckService({FirebaseFirestore? firestore})
-    : _firestore = firestore ?? FirebaseFirestore.instance;
+  final Map<String, StudyDeckModel> _store = {};
+  final StreamController<void> _controller =
+      StreamController<void>.broadcast();
 
-  final FirebaseFirestore _firestore;
-
-  CollectionReference<Map<String, dynamic>> get _decks =>
-      _firestore.collection(AppConstants.studyDecksCollection);
-
-  Future<void> createDeck(StudyDeckModel deck) =>
-      _decks.doc(deck.id).set(deck.toMap());
-
-  Stream<List<StudyDeckModel>> watchDecks(String userId) {
-    return _decks
-        .where('userId', isEqualTo: userId)
-        .snapshots()
-        .map(
-          (snapshot) => snapshot.docs
-              .map((doc) => StudyDeckModel.fromMap(doc.id, doc.data()))
-              .toList(),
-        );
+  Future<void> createDeck(StudyDeckModel deck) async {
+    _store[deck.id] = deck;
+    _controller.add(null);
   }
+
+  Stream<List<StudyDeckModel>> watchDecks(String userId) async* {
+    yield _store.values.where((d) => d.userId == userId).toList();
+    yield* _controller.stream.map(
+      (_) => _store.values.where((d) => d.userId == userId).toList(),
+    );
+  }
+
+  /// Releases resources held by this service.
+  void dispose() => _controller.close();
 }

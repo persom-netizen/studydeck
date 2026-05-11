@@ -1,10 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../config/routes.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/connectivity_provider.dart';
+import '../../services/auth_service.dart';
 import '../../theme/colors.dart';
 import '../../utils/validators.dart';
 
@@ -41,8 +41,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       Navigator.of(context).pushReplacementNamed(AppRoutes.dashboard);
     } else {
       final error = ref.read(authNotifierProvider).error;
-      final message = error is FirebaseAuthException
-          ? Validators.firebaseAuthError(error.code)
+      final message = error is AuthException
+          ? Validators.authError(error.code)
           : 'An error occurred. Please try again.';
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -230,7 +230,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 }
 
-/// Small chip that reflects the current network / Firebase connectivity state.
+/// Small chip that reflects the current network connectivity state.
 class _ConnectivityChip extends StatelessWidget {
   const _ConnectivityChip({required this.connectivity});
 
@@ -252,7 +252,7 @@ class _ConnectivityChip extends StatelessWidget {
       data: (connected) => connected
           ? const _StatusChip(
               icon: Icons.cloud_done_outlined,
-              label: 'Connected to Firebase',
+              label: 'Connected',
               color: Colors.green,
             )
           : const _StatusChip(

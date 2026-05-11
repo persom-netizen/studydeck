@@ -1,21 +1,20 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:async';
 
-import '../config/app_constants.dart';
-
-/// Calendar sync service backed by Firestore documents.
+/// Calendar sync service (in-memory).
 class CalendarService {
-  CalendarService({FirebaseFirestore? firestore})
-    : _firestore = firestore ?? FirebaseFirestore.instance;
+  final List<Map<String, dynamic>> _store = [];
+  final StreamController<void> _controller =
+      StreamController<void>.broadcast();
 
-  final FirebaseFirestore _firestore;
-
-  CollectionReference<Map<String, dynamic>> get _calendars =>
-      _firestore.collection(AppConstants.calendarCollection);
-
-  Stream<List<Map<String, dynamic>>> watchCalendarEvents(String userId) {
-    return _calendars
-        .where('userId', isEqualTo: userId)
-        .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
+  Stream<List<Map<String, dynamic>>> watchCalendarEvents(
+    String userId,
+  ) async* {
+    yield _store.where((e) => e['userId'] == userId).toList();
+    yield* _controller.stream.map(
+      (_) => _store.where((e) => e['userId'] == userId).toList(),
+    );
   }
+
+  /// Releases resources held by this service.
+  void dispose() => _controller.close();
 }

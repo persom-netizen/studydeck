@@ -38,8 +38,8 @@ class Validators {
     return null;
   }
 
-  /// Maps a Firebase Auth error code to a human-readable message.
-  static String firebaseAuthError(String code) {
+  /// Maps an [AuthException] code to a human-readable message.
+  static String authError(String code) {
     switch (code) {
       case 'user-not-found':
         return 'No account found with this email.';

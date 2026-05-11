@@ -1,25 +1,23 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:async';
 
-import '../config/app_constants.dart';
 import '../models/user_model.dart';
 
-/// User profile persistence layer.
+/// User profile persistence layer (in-memory).
 class UserService {
-  UserService({FirebaseFirestore? firestore})
-    : _firestore = firestore ?? FirebaseFirestore.instance;
+  final Map<String, UserModel> _store = {};
+  final StreamController<void> _controller =
+      StreamController<void>.broadcast();
 
-  final FirebaseFirestore _firestore;
-
-  CollectionReference<Map<String, dynamic>> get _users =>
-      _firestore.collection(AppConstants.usersCollection);
-
-  Future<void> saveUser(UserModel user) =>
-      _users.doc(user.id).set(user.toMap(), SetOptions(merge: true));
-
-  Stream<UserModel?> watchUser(String userId) {
-    return _users.doc(userId).snapshots().map((doc) {
-      if (!doc.exists || doc.data() == null) return null;
-      return UserModel.fromMap(doc.id, doc.data()!);
-    });
+  Future<void> saveUser(UserModel user) async {
+    _store[user.id] = user;
+    _controller.add(null);
   }
+
+  Stream<UserModel?> watchUser(String userId) async* {
+    yield _store[userId];
+    yield* _controller.stream.map((_) => _store[userId]);
+  }
+
+  /// Releases resources held by this service.
+  void dispose() => _controller.close();
 }

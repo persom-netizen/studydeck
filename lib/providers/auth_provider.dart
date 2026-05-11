@@ -1,13 +1,13 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../models/auth_user.dart';
 import '../services/auth_service.dart';
 
 /// Provides the auth service instance.
 final authServiceProvider = Provider<AuthService>((ref) => AuthService());
 
 /// Auth state stream provider used to reactively drive routing.
-final authStateProvider = StreamProvider<User?>((ref) {
+final authStateProvider = StreamProvider<AuthUser?>((ref) {
   return ref.watch(authServiceProvider).authStateChanges();
 });
 
@@ -27,7 +27,7 @@ class AuthNotifier extends StateNotifier<AsyncValue<void>> {
       await _authService.signIn(email, password);
       state = const AsyncData(null);
       return true;
-    } on FirebaseAuthException catch (e, st) {
+    } on AuthException catch (e, st) {
       state = AsyncError(e, st);
       return false;
     } catch (e, st) {
@@ -46,7 +46,7 @@ class AuthNotifier extends StateNotifier<AsyncValue<void>> {
       await _authService.signUp(email, password);
       state = const AsyncData(null);
       return true;
-    } on FirebaseAuthException catch (e, st) {
+    } on AuthException catch (e, st) {
       state = AsyncError(e, st);
       return false;
     } catch (e, st) {
