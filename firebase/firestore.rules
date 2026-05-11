@@ -22,19 +22,23 @@ service cloud.firestore {
     }
 
     match /courses/{courseId} {
-      allow read, write: if isSignedIn();
+      allow read: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create, update, delete: if isSignedIn() && request.resource.data.userId == request.auth.uid;
     }
 
     match /flashcards/{flashcardId} {
-      allow read, write: if isSignedIn();
+      allow read: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create, update, delete: if isSignedIn() && request.resource.data.userId == request.auth.uid;
     }
 
     match /notes/{noteId} {
-      allow read, write: if isSignedIn();
+      allow read: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create, update, delete: if isSignedIn() && request.resource.data.userId == request.auth.uid;
     }
 
     match /sources/{sourceId} {
-      allow read, write: if isSignedIn();
+      allow read: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create, update, delete: if isSignedIn() && request.resource.data.userId == request.auth.uid;
     }
 
     match /todos/{todoId} {

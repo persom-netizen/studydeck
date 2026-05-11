@@ -6,12 +6,17 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:studydeck/main.dart';
 
 void main() {
   testWidgets('Study Deck dashboard renders', (WidgetTester tester) async {
-    await tester.pumpWidget(StudyDeckApp(initializationFuture: Future.value()));
+    await tester.pumpWidget(
+      ProviderScope(
+        child: StudyDeckApp(initializationFuture: Future.value()),
+      ),
+    );
     await tester.pump();
 
     expect(find.text('Study Deck Dashboard'), findsOneWidget);

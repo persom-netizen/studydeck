@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../utils/validators.dart';
+
 /// User profile form fields reused by onboarding and settings.
 class UserFormWidget extends StatelessWidget {
   const UserFormWidget({
@@ -18,10 +20,12 @@ class UserFormWidget extends StatelessWidget {
         TextFormField(
           controller: fullNameController,
           decoration: const InputDecoration(labelText: 'Full Name'),
+          validator: (value) => Validators.requiredText(value, 'Full Name'),
         ),
         TextFormField(
           controller: usernameController,
           decoration: const InputDecoration(labelText: 'Username'),
+          validator: (value) => Validators.requiredText(value, 'Username'),
         ),
       ],
     );

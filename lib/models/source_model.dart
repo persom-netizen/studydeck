@@ -5,6 +5,7 @@ enum SourceType { pdf, image, audio, document, link }
 class SourceModel {
   const SourceModel({
     required this.id,
+    required this.userId,
     required this.courseId,
     required this.title,
     required this.type,
@@ -12,6 +13,7 @@ class SourceModel {
   });
 
   final String id;
+  final String userId;
   final String courseId;
   final String title;
   final SourceType type;
@@ -19,6 +21,7 @@ class SourceModel {
 
   Map<String, dynamic> toMap() => {
         'courseId': courseId,
+        'userId': userId,
         'title': title,
         'type': type.name,
         'url': url,
@@ -26,6 +29,7 @@ class SourceModel {
 
   factory SourceModel.fromMap(String id, Map<String, dynamic> data) => SourceModel(
         id: id,
+        userId: data['userId'] as String? ?? '',
         courseId: data['courseId'] as String? ?? '',
         title: data['title'] as String? ?? '',
         type: SourceType.values.firstWhere(
