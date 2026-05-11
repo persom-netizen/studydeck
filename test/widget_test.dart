@@ -9,17 +9,20 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:studydeck/main.dart';
+import 'package:studydeck/providers/auth_provider.dart';
 
 void main() {
-  testWidgets('Study Deck dashboard renders', (WidgetTester tester) async {
+  testWidgets('Study Deck routes unauthenticated users to login', (WidgetTester tester) async {
     await tester.pumpWidget(
       ProviderScope(
+        overrides: [
+          authStateProvider.overrideWith((ref) => Stream.value(null)),
+        ],
         child: StudyDeckApp(initializationFuture: Future.value()),
       ),
     );
     await tester.pump();
 
-    expect(find.text('Study Deck Dashboard'), findsOneWidget);
-    expect(find.text('Welcome to Study Deck'), findsOneWidget);
+    expect(find.text('Login'), findsOneWidget);
   });
 }

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'config/app_constants.dart';
 import 'config/firebase_config.dart';
 import 'config/routes.dart';
+import 'providers/auth_provider.dart';
 import 'theme/app_theme.dart';
 
 void main() {
@@ -11,13 +12,13 @@ void main() {
 }
 
 /// Root Study Deck application widget.
-class StudyDeckApp extends StatelessWidget {
+class StudyDeckApp extends ConsumerWidget {
   const StudyDeckApp({super.key, this.initializationFuture});
 
   final Future<Object?>? initializationFuture;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return FutureBuilder(
       future: initializationFuture ?? FirebaseConfig.initialize(),
       builder: (context, snapshot) {
@@ -27,10 +28,14 @@ class StudyDeckApp extends StatelessWidget {
           );
         }
 
+        final authState = ref.watch(authStateProvider);
         return MaterialApp(
           title: AppConstants.appName,
           theme: AppTheme.lightTheme(),
-          initialRoute: AppRoutes.dashboard,
+          initialRoute: authState.maybeWhen(
+            data: (user) => user == null ? AppRoutes.login : AppRoutes.dashboard,
+            orElse: () => AppRoutes.login,
+          ),
           routes: AppRoutes.routeTable,
         );
       },
