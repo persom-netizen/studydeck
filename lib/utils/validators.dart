@@ -63,7 +63,7 @@ class Validators {
     }
   }
 
-  /// Returns a score 0–4 representing password strength.
+  /// Returns a score 0–5 representing password strength.
   ///
   /// Criteria: length ≥ 8, uppercase, lowercase, digit, special character.
   static int passwordStrengthScore(String value) {

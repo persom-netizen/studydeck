@@ -261,7 +261,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   }
 }
 
-/// Animated password-strength indicator bar (0–5 criteria).
+/// Animated password-strength indicator bar with 5 criteria (score 0–5).
 class _PasswordStrengthBar extends StatelessWidget {
   const _PasswordStrengthBar({required this.score});
 
