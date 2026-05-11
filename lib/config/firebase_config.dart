@@ -29,11 +29,18 @@ class FirebaseConfig {
     const storageBucket = String.fromEnvironment('FIREBASE_STORAGE_BUCKET');
     const measurementId = String.fromEnvironment('FIREBASE_MEASUREMENT_ID');
 
-    if (apiKey.isEmpty || appId.isEmpty || messagingSenderId.isEmpty || projectId.isEmpty) {
-      throw const FirebaseException(
+    final missingKeys = <String>[
+      if (apiKey.isEmpty) 'FIREBASE_API_KEY',
+      if (appId.isEmpty) 'FIREBASE_APP_ID',
+      if (messagingSenderId.isEmpty) 'FIREBASE_MESSAGING_SENDER_ID',
+      if (projectId.isEmpty) 'FIREBASE_PROJECT_ID',
+    ];
+
+    if (missingKeys.isNotEmpty) {
+      throw FirebaseException(
         plugin: 'firebase_core',
         code: 'missing-web-config',
-        message: 'Missing required Firebase web configuration values.',
+        message: 'Missing required Firebase web configuration values: ${missingKeys.join(', ')}',
       );
     }
 

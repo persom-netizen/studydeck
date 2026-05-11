@@ -28,12 +28,12 @@ class StudyDeckApp extends ConsumerWidget {
           );
         }
         if (snapshot.hasError) {
-          return MaterialApp(
+          return const MaterialApp(
             home: Scaffold(
               body: Center(
                 child: Padding(
                   padding: const EdgeInsets.all(16),
-                  child: Text('Firebase initialization failed: ${snapshot.error}'),
+                  child: Text('Firebase initialization failed. Please check your Firebase configuration.'),
                 ),
               ),
             ),
