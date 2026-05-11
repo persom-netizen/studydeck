@@ -8,14 +8,20 @@ import '../utils/logger.dart';
 /// This keeps initialization in one place so environment-specific config can be
 /// added later (for example, generated options from FlutterFire CLI).
 class FirebaseConfig {
+  static final FirebaseOptions _webOptions = _buildWebOptionsFromEnvironment();
+
   static Future<FirebaseApp> initialize() async {
     try {
       if (kIsWeb) {
-        return Firebase.initializeApp(options: _webOptionsFromEnvironment);
+        return Firebase.initializeApp(options: _webOptions);
       }
       return Firebase.initializeApp();
     } on FirebaseException catch (error, stackTrace) {
-      AppLogger.error('Failed to initialize Firebase [${error.code}] ${error.message}', error, stackTrace);
+      AppLogger.error(
+        'Firebase initialization failed with code "${error.code}": ${error.message}',
+        error,
+        stackTrace,
+      );
       rethrow;
     } catch (error, stackTrace) {
       AppLogger.error('Failed to initialize Firebase', error, stackTrace);
@@ -23,7 +29,7 @@ class FirebaseConfig {
     }
   }
 
-  static FirebaseOptions get _webOptionsFromEnvironment {
+  static FirebaseOptions _buildWebOptionsFromEnvironment() {
     const apiKey = String.fromEnvironment('FIREBASE_API_KEY');
     const appId = String.fromEnvironment('FIREBASE_APP_ID');
     const messagingSenderId = String.fromEnvironment('FIREBASE_MESSAGING_SENDER_ID');
