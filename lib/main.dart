@@ -33,7 +33,8 @@ class StudyDeckApp extends ConsumerWidget {
           title: AppConstants.appName,
           theme: AppTheme.lightTheme(),
           initialRoute: authState.maybeWhen(
-            data: (user) => user == null ? AppRoutes.login : AppRoutes.dashboard,
+            data: (user) =>
+                user == null ? AppRoutes.login : AppRoutes.dashboard,
             orElse: () => AppRoutes.login,
           ),
           routes: AppRoutes.routeTable,

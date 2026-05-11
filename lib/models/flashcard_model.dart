@@ -20,14 +20,15 @@ class FlashcardModel {
   final FlashcardDifficulty difficulty;
 
   Map<String, dynamic> toMap() => {
-        'courseId': courseId,
-        'userId': userId,
-        'front': front,
-        'back': back,
-        'difficulty': difficulty.name,
-      };
+    'courseId': courseId,
+    'userId': userId,
+    'front': front,
+    'back': back,
+    'difficulty': difficulty.name,
+  };
 
-  factory FlashcardModel.fromMap(String id, Map<String, dynamic> data) => FlashcardModel(
+  factory FlashcardModel.fromMap(String id, Map<String, dynamic> data) =>
+      FlashcardModel(
         id: id,
         userId: data['userId'] as String? ?? '',
         courseId: data['courseId'] as String? ?? '',

@@ -17,14 +17,15 @@ class CourseModel {
   final String code;
 
   Map<String, dynamic> toMap() => {
-        'deckId': deckId,
-        'userId': userId,
-        'courseName': courseName,
-        'instructor': instructor,
-        'code': code,
-      };
+    'deckId': deckId,
+    'userId': userId,
+    'courseName': courseName,
+    'instructor': instructor,
+    'code': code,
+  };
 
-  factory CourseModel.fromMap(String id, Map<String, dynamic> data) => CourseModel(
+  factory CourseModel.fromMap(String id, Map<String, dynamic> data) =>
+      CourseModel(
         id: id,
         userId: data['userId'] as String? ?? '',
         deckId: data['deckId'] as String? ?? '',

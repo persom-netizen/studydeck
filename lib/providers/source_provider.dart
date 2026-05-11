@@ -7,6 +7,9 @@ import '../services/source_service.dart';
 final sourceServiceProvider = Provider<SourceService>((ref) => SourceService());
 
 /// Watches sources for a course.
-final sourcesProvider = StreamProvider.family<List<SourceModel>, String>((ref, courseId) {
+final sourcesProvider = StreamProvider.family<List<SourceModel>, String>((
+  ref,
+  courseId,
+) {
   return ref.watch(sourceServiceProvider).watchSources(courseId);
 });

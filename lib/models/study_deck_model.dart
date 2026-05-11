@@ -20,14 +20,15 @@ class StudyDeckModel {
   final bool isDownloadable;
 
   Map<String, dynamic> toMap() => {
-        'userId': userId,
-        'title': title,
-        'description': description,
-        'visibility': visibility.name,
-        'isDownloadable': isDownloadable,
-      };
+    'userId': userId,
+    'title': title,
+    'description': description,
+    'visibility': visibility.name,
+    'isDownloadable': isDownloadable,
+  };
 
-  factory StudyDeckModel.fromMap(String id, Map<String, dynamic> data) => StudyDeckModel(
+  factory StudyDeckModel.fromMap(String id, Map<String, dynamic> data) =>
+      StudyDeckModel(
         id: id,
         userId: data['userId'] as String? ?? '',
         title: data['title'] as String? ?? '',

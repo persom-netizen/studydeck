@@ -7,6 +7,9 @@ import '../services/todo_service.dart';
 final todoServiceProvider = Provider<TodoService>((ref) => TodoService());
 
 /// Watches todos for a user.
-final todosProvider = StreamProvider.family<List<TodoModel>, String>((ref, userId) {
+final todosProvider = StreamProvider.family<List<TodoModel>, String>((
+  ref,
+  userId,
+) {
   return ref.watch(todoServiceProvider).watchTodos(userId);
 });

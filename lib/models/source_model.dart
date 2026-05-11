@@ -20,14 +20,15 @@ class SourceModel {
   final String url;
 
   Map<String, dynamic> toMap() => {
-        'courseId': courseId,
-        'userId': userId,
-        'title': title,
-        'type': type.name,
-        'url': url,
-      };
+    'courseId': courseId,
+    'userId': userId,
+    'title': title,
+    'type': type.name,
+    'url': url,
+  };
 
-  factory SourceModel.fromMap(String id, Map<String, dynamic> data) => SourceModel(
+  factory SourceModel.fromMap(String id, Map<String, dynamic> data) =>
+      SourceModel(
         id: id,
         userId: data['userId'] as String? ?? '',
         courseId: data['courseId'] as String? ?? '',

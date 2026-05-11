@@ -20,7 +20,10 @@ class BottomNavWidget extends StatelessWidget {
         BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: 'Home'),
         BottomNavigationBarItem(icon: Icon(Icons.folder), label: 'Decks'),
         BottomNavigationBarItem(icon: Icon(Icons.task), label: 'To-do'),
-        BottomNavigationBarItem(icon: Icon(Icons.calendar_month), label: 'Calendar'),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.calendar_month),
+          label: 'Calendar',
+        ),
       ],
     );
   }

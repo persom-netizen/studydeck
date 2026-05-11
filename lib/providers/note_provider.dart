@@ -7,6 +7,9 @@ import '../services/note_service.dart';
 final noteServiceProvider = Provider<NoteService>((ref) => NoteService());
 
 /// Watches notes for a course.
-final notesProvider = StreamProvider.family<List<NoteModel>, String>((ref, courseId) {
+final notesProvider = StreamProvider.family<List<NoteModel>, String>((
+  ref,
+  courseId,
+) {
   return ref.watch(noteServiceProvider).watchNotes(courseId);
 });

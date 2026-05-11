@@ -10,10 +10,7 @@ class FlashcardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: ListTile(
-        title: Text(front),
-        subtitle: Text(back),
-      ),
+      child: ListTile(title: Text(front), subtitle: Text(back)),
     );
   }
 }

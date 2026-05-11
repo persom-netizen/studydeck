@@ -18,14 +18,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Study Deck Dashboard')),
       body: Center(
-        child: Text(
-          switch (_index) {
-            0 => 'Welcome to Study Deck',
-            1 => 'Your decks and courses',
-            2 => 'Your tasks',
-            _ => 'Your schedule',
-          },
-        ),
+        child: Text(switch (_index) {
+          0 => 'Welcome to Study Deck',
+          1 => 'Your decks and courses',
+          2 => 'Your tasks',
+          _ => 'Your schedule',
+        }),
       ),
       bottomNavigationBar: BottomNavWidget(
         currentIndex: _index,

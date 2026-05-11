@@ -7,6 +7,9 @@ import '../services/course_service.dart';
 final courseServiceProvider = Provider<CourseService>((ref) => CourseService());
 
 /// Watches courses for a deck.
-final coursesProvider = StreamProvider.family<List<CourseModel>, String>((ref, deckId) {
+final coursesProvider = StreamProvider.family<List<CourseModel>, String>((
+  ref,
+  deckId,
+) {
   return ref.watch(courseServiceProvider).watchCourses(deckId);
 });

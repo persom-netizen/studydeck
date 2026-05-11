@@ -20,21 +20,22 @@ class UserModel {
   final EducationLevel educationLevel;
 
   Map<String, dynamic> toMap() => {
-        'fullName': fullName,
-        'username': username,
-        'email': email,
-        'age': age,
-        'educationLevel': educationLevel.name,
-      };
+    'fullName': fullName,
+    'username': username,
+    'email': email,
+    'age': age,
+    'educationLevel': educationLevel.name,
+  };
 
   factory UserModel.fromMap(String id, Map<String, dynamic> data) => UserModel(
-        id: id,
-        fullName: data['fullName'] as String? ?? '',
-        username: data['username'] as String? ?? '',
-        email: data['email'] as String? ?? '',
-        age: (data['age'] as num?)?.toInt() ?? 0,
-        educationLevel: (data['educationLevel'] as String?) == EducationLevel.college.name
-            ? EducationLevel.college
-            : EducationLevel.highSchool,
-      );
+    id: id,
+    fullName: data['fullName'] as String? ?? '',
+    username: data['username'] as String? ?? '',
+    email: data['email'] as String? ?? '',
+    age: (data['age'] as num?)?.toInt() ?? 0,
+    educationLevel:
+        (data['educationLevel'] as String?) == EducationLevel.college.name
+        ? EducationLevel.college
+        : EducationLevel.highSchool,
+  );
 }

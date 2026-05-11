@@ -4,7 +4,8 @@ import '../config/app_constants.dart';
 
 /// Calendar sync service backed by Firestore documents.
 class CalendarService {
-  CalendarService({FirebaseFirestore? firestore}) : _firestore = firestore ?? FirebaseFirestore.instance;
+  CalendarService({FirebaseFirestore? firestore})
+    : _firestore = firestore ?? FirebaseFirestore.instance;
 
   final FirebaseFirestore _firestore;
 
@@ -12,8 +13,9 @@ class CalendarService {
       _firestore.collection(AppConstants.calendarCollection);
 
   Stream<List<Map<String, dynamic>>> watchCalendarEvents(String userId) {
-    return _calendars.where('userId', isEqualTo: userId).snapshots().map(
-          (snapshot) => snapshot.docs.map((doc) => doc.data()).toList(),
-        );
+    return _calendars
+        .where('userId', isEqualTo: userId)
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
   }
 }

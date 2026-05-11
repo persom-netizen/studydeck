@@ -12,7 +12,9 @@ import 'package:studydeck/main.dart';
 import 'package:studydeck/providers/auth_provider.dart';
 
 void main() {
-  testWidgets('Study Deck routes unauthenticated users to login', (WidgetTester tester) async {
+  testWidgets('Study Deck routes unauthenticated users to login', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [

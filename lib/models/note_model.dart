@@ -17,19 +17,19 @@ class NoteModel {
   final bool pinned;
 
   Map<String, dynamic> toMap() => {
-        'courseId': courseId,
-        'userId': userId,
-        'title': title,
-        'body': body,
-        'pinned': pinned,
-      };
+    'courseId': courseId,
+    'userId': userId,
+    'title': title,
+    'body': body,
+    'pinned': pinned,
+  };
 
   factory NoteModel.fromMap(String id, Map<String, dynamic> data) => NoteModel(
-        id: id,
-        userId: data['userId'] as String? ?? '',
-        courseId: data['courseId'] as String? ?? '',
-        title: data['title'] as String? ?? '',
-        body: data['body'] as String? ?? '',
-        pinned: data['pinned'] as bool? ?? false,
-      );
+    id: id,
+    userId: data['userId'] as String? ?? '',
+    courseId: data['courseId'] as String? ?? '',
+    title: data['title'] as String? ?? '',
+    body: data['body'] as String? ?? '',
+    pinned: data['pinned'] as bool? ?? false,
+  );
 }

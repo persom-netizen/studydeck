@@ -8,9 +8,7 @@ class NoteListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Notes')),
-      body: const Center(
-        child: Text('Notes - implementation scaffold ready'),
-      ),
+      body: const Center(child: Text('Notes - implementation scaffold ready')),
     );
   }
 }
