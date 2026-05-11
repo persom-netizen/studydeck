@@ -33,7 +33,10 @@ class StudyDeckApp extends ConsumerWidget {
               body: Center(
                 child: Padding(
                   padding: const EdgeInsets.all(16),
-                  child: Text('Firebase initialization failed. Please check your Firebase configuration.'),
+                  child: Text(
+                    'Firebase initialization failed. '
+                    'See docs/FIREBASE_SETUP.md for configuration steps.',
+                  ),
                 ),
               ),
             ),

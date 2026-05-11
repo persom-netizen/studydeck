@@ -14,6 +14,9 @@ class FirebaseConfig {
         return Firebase.initializeApp(options: _webOptionsFromEnvironment);
       }
       return Firebase.initializeApp();
+    } on FirebaseException catch (error, stackTrace) {
+      AppLogger.error('Failed to initialize Firebase [${error.code}] ${error.message}', error, stackTrace);
+      rethrow;
     } catch (error, stackTrace) {
       AppLogger.error('Failed to initialize Firebase', error, stackTrace);
       rethrow;
