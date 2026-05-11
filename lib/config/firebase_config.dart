@@ -8,12 +8,13 @@ import '../utils/logger.dart';
 /// This keeps initialization in one place so environment-specific config can be
 /// added later (for example, generated options from FlutterFire CLI).
 class FirebaseConfig {
-  static final FirebaseOptions _webOptions = _buildWebOptionsFromEnvironment();
+  static FirebaseOptions? _webOptions;
 
   static Future<FirebaseApp> initialize() async {
     try {
       if (kIsWeb) {
-        return Firebase.initializeApp(options: _webOptions);
+        final options = _webOptions ??= _buildWebOptionsFromEnvironment();
+        return Firebase.initializeApp(options: options);
       }
       return Firebase.initializeApp();
     } on FirebaseException catch (error, stackTrace) {

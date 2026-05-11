@@ -31,8 +31,8 @@ class StudyDeckApp extends ConsumerWidget {
           return const MaterialApp(
             home: Scaffold(
               body: Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
+                child: const Padding(
+                  padding: EdgeInsets.all(16),
                   child: Text(
                     'Firebase initialization failed. '
                     'See docs/FIREBASE_SETUP.md for configuration steps.',
